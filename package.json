@@ -1,11 +1,12 @@
 {
   "name": "hardhat-project",
+  "license": "ISC",
   "devDependencies": {
     "@nomiclabs/hardhat-ethers": "npm:hardhat-deploy-ethers",
     "@nomiclabs/hardhat-etherscan": "^2.1.6",
     "@nomiclabs/hardhat-waffle": "^2.0.1",
-    "@typechain/ethers-v5": "^7.1.2",
-    "@typechain/hardhat": "^2.3.0",
+    "@typechain/ethers-v5": "^8.0.5",
+    "@typechain/hardhat": "^3.0.0",
     "@types/chai": "^4.2.22",
     "@types/mocha": "^9.0.0",
     "@types/node": "^16.11.7",
@@ -33,7 +34,7 @@
     "solhint": "^3.3.6",
     "solidity-coverage": "^0.7.17",
     "ts-node": "^10.4.0",
-    "typechain": "^5.1.2",
+    "typechain": "^6.0.5",
     "typescript": "^4.4.4"
   },
   "dependencies": {
@@ -44,6 +45,8 @@
     "hardhat-abi-exporter": "^2.3.1",
     "hardhat-preprocessor": "^0.1.4",
     "hardhat-spdx-license-identifier": "^2.0.3",
-    "hardhat-watcher": "^2.1.1"
+    "hardhat-typechain": "^0.3.5",
+    "hardhat-watcher": "^2.1.1",
+    "ts-generator": "^0.1.1"
   }
 }

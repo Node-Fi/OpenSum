@@ -2,9 +2,9 @@
 
 pragma solidity ^0.8.0;
 
-import "@openzeppelin/contracts/token/ERC20/ERC20Burnable.sol";
+import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/math/SafeMath.sol";
+import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
 /**
  * @title Liquidity Provider Token
@@ -13,6 +13,8 @@ import "@openzeppelin/contracts/math/SafeMath.sol";
  */
 contract LPToken is ERC20Burnable, Ownable {
   using SafeMath for uint256;
+
+  uint8 _decimals;
 
   /**
    * @notice Deploys LPToken contract with given name, symbol, and decimals
@@ -25,8 +27,12 @@ contract LPToken is ERC20Burnable, Ownable {
     string memory name_,
     string memory symbol_,
     uint8 decimals_
-  ) public ERC20(name_, symbol_) {
-    _setupDecimals(decimals_);
+  ) ERC20(name_, symbol_) {
+    _decimals = decimals_;
+  }
+
+  function decimals() public view virtual override returns (uint8) {
+    return _decimals;
   }
 
   /**
