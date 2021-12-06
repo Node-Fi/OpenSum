@@ -41,21 +41,6 @@ contract Swap is OwnerPausable, ReentrancyGuard {
     precisionMultipliers = new uint256[](_decimals.length);
 
     for (uint8 i = 0; i < _tokens.length; i++) {
-      //   if (i > 0) {
-      //     // Check if index is already used. Check if 0th element is a duplicate.
-      //     require(
-      //       tokenIndexes[address(_tokens[i])] == 0 && _tokens[0] != _tokens[i],
-      //       "Duplicate tokens"
-      //     );
-      //   }
-      //   require(
-      //     address(_tokens[i]) != address(0),
-      //     "The 0 address isn't an ERC-20"
-      //   );
-      //   require(
-      //     decimals[i] <= LP_PRECISION_DECIMALS,
-      //     "Token decimals exceeds max"
-      //   );
       precisionMultipliers[i] =
         10**uint256(LP_PRECISION_DECIMALS).sub(uint256(_decimals[i]));
       tokenIndexes[address(_tokens[i])] = i;
