@@ -13,18 +13,22 @@ const deployMinima: DeployFunction = async function ({
   const SafeMath = await deploy("SafeMath", { from: deployer, log: true });
 
   console.log(`Deploying from ${deployer}`);
-  const erc1 = await deploy("ERC20", {
-    from: deployer,
-    args: ["test1", "t1"],
-    log: true,
-  });
-  const erc2 = await deploy("ERC20", {
-    from: deployer,
-    args: ["test2", "t2"],
-    log: true,
-  });
+  // const erc1 = await deploy("ERC20", {
+  //   from: deployer,
+  //   args: ["test1", "t1"],
+  //   log: true,
+  // });
+  // const erc2 = await deploy("ERC20", {
+  //   from: deployer,
+  //   args: ["test2", "t2"],
+  //   log: true,
+  // });
+  const tokens = [
+    "0x122013fd7dF1C6F636a5bb8f03108E876548b455",
+    "0xE919F65739c26a42616b7b8eedC6b5524d1e3aC4",
+  ];
 
-  const args = [[erc1.address, erc2.address], ["18", "18"], "test pool", "tp1"];
+  const args = [tokens, ["18", "18"], "OpenSum wETH v1/v2 LP", "OSlp"];
   await deploy("Swap", {
     from: deployer,
     args,
