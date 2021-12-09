@@ -13,7 +13,7 @@ import "./OwnerPausable.sol";
 import "./LPToken.sol";
 
 // A constant-sum swap contract
-contract Swap is OwnerPausable, ReentrancyGuard {
+contract OpenSumSwap is OwnerPausable, ReentrancyGuard {
   using SafeERC20 for IERC20;
   using SafeMath for uint256;
   IERC20[] tokens;
@@ -333,7 +333,7 @@ contract Swap is OwnerPausable, ReentrancyGuard {
     for (uint8 i = 0; i < tokens.length; i++) {
       require(amounts[i] >= minAmounts[i], "Not enough received!");
       balances[i] = balances[i].sub(amounts[i]);
-      tokens[i].safeTransfer(msg.sender, balances[i]);
+      tokens[i].safeTransfer(msg.sender, amounts[i]);
     }
     lpToken.burnFrom(msg.sender, amount);
     emit RemoveLiquidity(msg.sender, amounts, lpToken.totalSupply());

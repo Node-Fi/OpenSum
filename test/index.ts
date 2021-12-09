@@ -1,7 +1,10 @@
 import { expect } from "chai";
 import { ethers } from "hardhat";
 import { EthereumProvider } from "hardhat/types";
-import { Swap as SwapContract, LPToken as ERC20_T } from "../typechain-types";
+import {
+  OpenSumSwap as SwapContract,
+  LPToken as ERC20_T,
+} from "../typechain-types";
 
 describe("Swap", function () {
   let swapContract: SwapContract;
@@ -14,7 +17,7 @@ describe("Swap", function () {
     const [owner] = await ethers.getSigners();
     signer = await owner.getAddress();
     const ERC20 = await ethers.getContractFactory("LPToken");
-    const Swap = ethers.getContractFactory("Swap");
+    const Swap = ethers.getContractFactory("OpenSumSwap");
 
     token1 = (await ERC20.deploy("Test 1", "t1", "18")) as ERC20_T;
     token2 = (await ERC20.deploy("Test 2", "t2", "18")) as ERC20_T;
@@ -22,7 +25,7 @@ describe("Swap", function () {
       await Swap
     ).deploy(
       [token1.address, token2.address],
-      ["18", "18"],
+      ["8", "8"],
       "Test",
       "t"
     )) as SwapContract;
@@ -31,7 +34,7 @@ describe("Swap", function () {
     lpToken = ERC20.attach(await swapContract.getLpToken()) as ERC20_T;
   });
   it("Can be deposited into", async function () {
-    const expectedIncrease = "1000";
+    const expectedIncrease = "10000000000000";
     const initial = await lpToken.balanceOf(signer);
     const expected = initial.add(expectedIncrease);
 
@@ -42,6 +45,38 @@ describe("Swap", function () {
     const actual = await lpToken.balanceOf(signer);
     expect(actual).equal(expected);
   });
+  it("Can be withdrawn from", async function () {
+    const block = await ethers.provider.getBlock(
+      await ethers.provider.getBlockNumber()
+    );
+
+    const expectedIncrease = "10000000000000";
+    const initial = await lpToken.balanceOf(signer);
+    const expected = initial.add(expectedIncrease);
+    await token1.approve(swapContract.address, "500", { from: signer });
+    await token2.approve(swapContract.address, "500", { from: signer });
+    await swapContract.addLiquidity(["500", "500"], "999", { from: signer });
+    const actual = await lpToken.balanceOf(signer);
+    expect(actual).equal(expected);
+
+    const tok1BalanceBefore = await token1.balanceOf(signer);
+    const tok2BalanceBefore = await token2.balanceOf(signer);
+    await lpToken.approve(swapContract.address, actual, { from: signer });
+    await swapContract.removeLiquidity(
+      expectedIncrease,
+      ["500", "500"],
+      block.timestamp + 100,
+      { from: signer }
+    );
+    const tok1BalanceAfter = await token1.balanceOf(signer);
+    const tok2BalanceAfter = await token2.balanceOf(signer);
+    const differenceT1 = tok1BalanceAfter.sub(tok1BalanceBefore);
+    const differenceT2 = tok2BalanceAfter.sub(tok2BalanceBefore);
+
+    expect(differenceT1.toNumber()).equal(500);
+    expect(differenceT2.toNumber()).equal(500);
+  });
+
   it("Can facilitate a 1:1 swap", async function () {
     // Add liquidity :)
     await token1.approve(swapContract.address, "1000", { from: signer });

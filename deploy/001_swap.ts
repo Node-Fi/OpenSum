@@ -24,12 +24,12 @@ const deployMinima: DeployFunction = async function ({
   //   log: true,
   // });
   const tokens = [
-    "0x122013fd7dF1C6F636a5bb8f03108E876548b455",
-    "0xE919F65739c26a42616b7b8eedC6b5524d1e3aC4",
+    "0xBAAB46E28388d2779e6E31Fd00cF0e5Ad95E327B",
+    "0xBe50a3013A1c94768A1ABb78c3cB79AB28fc1aCE",
   ];
 
-  const args = [tokens, ["18", "18"], "OpenSum wETH v1/v2 LP", "OSlp"];
-  await deploy("Swap", {
+  const args = [tokens, ["8", "8"], "OpenSum wBTC v1/v2 LP", "OSlp"];
+  await deploy("OpenSumSwap", {
     from: deployer,
     args,
     log: true,
