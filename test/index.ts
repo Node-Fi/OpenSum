@@ -77,6 +77,38 @@ describe("Swap", function () {
     expect(differenceT2.toNumber()).equal(500);
   });
 
+  it("Can be single-sided withdrawn from", async function () {
+    const block = await ethers.provider.getBlock(
+      await ethers.provider.getBlockNumber()
+    );
+
+    const expectedIncrease = "10000000000000";
+    const initial = await lpToken.balanceOf(signer);
+    const expected = initial.add(expectedIncrease);
+    await token1.approve(swapContract.address, "500", { from: signer });
+    await token2.approve(swapContract.address, "500", { from: signer });
+    await swapContract.addLiquidity(["500", "500"], "999", { from: signer });
+    const actual = await lpToken.balanceOf(signer);
+    expect(actual).equal(expected);
+
+    const tok1BalanceBefore = await token1.balanceOf(signer);
+    const lpBalanceBefore = await lpToken.balanceOf(signer);
+    await lpToken.approve(swapContract.address, actual, { from: signer });
+    await swapContract.removeLiquidityOneToken(
+      10000000000000 / 2,
+      token1.address,
+      "500",
+      { from: signer }
+    );
+    const tok1BalanceAfter = await token1.balanceOf(signer);
+    const lpBalanceAfter = await lpToken.balanceOf(signer);
+    const differenceT1 = tok1BalanceAfter.sub(tok1BalanceBefore);
+    const differenceLp = lpBalanceBefore.sub(lpBalanceAfter);
+
+    expect(differenceT1.toNumber()).equal(500);
+    expect(differenceLp.toNumber()).equal(10000000000000 / 2);
+  });
+
   it("Can facilitate a 1:1 swap", async function () {
     // Add liquidity :)
     await token1.approve(swapContract.address, "1000", { from: signer });
