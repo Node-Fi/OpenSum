@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: ISC
 
-//SPDX-License-Identifier: Unlicense
 pragma solidity ^0.8.0;
 
 import "hardhat/console.sol";
@@ -270,15 +269,15 @@ contract OpenSumSwap is OwnerPausable, ReentrancyGuard {
     );
     require(amountOut >= minAmountOut, "Minimum amount out was not met");
 
+    balances[tokenIndexFrom] = balances[tokenIndexFrom].add(amountIn);
+    balances[tokenIndexTo] = balances[tokenIndexTo].sub(amountOut);
+
     tokens[tokenIndexFrom].safeTransferFrom(
       msg.sender,
       address(this),
       amountIn
     );
     tokens[tokenIndexTo].safeTransfer(msg.sender, amountOut);
-
-    balances[tokenIndexFrom] = balances[tokenIndexFrom].add(amountIn);
-    balances[tokenIndexTo] = balances[tokenIndexTo].sub(amountOut);
 
     emit TokenSwap(
       msg.sender,

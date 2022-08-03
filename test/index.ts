@@ -1,6 +1,5 @@
 import { expect } from "chai";
 import { ethers } from "hardhat";
-import { EthereumProvider } from "hardhat/types";
 import {
   OpenSumSwap as SwapContract,
   LPToken as ERC20_T,
@@ -85,7 +84,7 @@ describe("Swap", function () {
       await ethers.provider.getBlockNumber()
     );
 
-    const expectedIncrease = "10000000000000";
+    const expectedIncrease = "1000";
     const initial = await lpToken.balanceOf(signer);
     const expected = initial.add(expectedIncrease);
     await token1.approve(swapContract.address, "500", { from: signer });
@@ -117,7 +116,7 @@ describe("Swap", function () {
       await ethers.provider.getBlockNumber()
     );
 
-    const expectedIncrease = "10000000000000";
+    const expectedIncrease = "1000";
     const initial = await lpToken.balanceOf(signer);
     const expected = initial.add(expectedIncrease);
     await token1.approve(swapContract.address, "500", { from: signer });
@@ -130,7 +129,7 @@ describe("Swap", function () {
     const lpBalanceBefore = await lpToken.balanceOf(signer);
     await lpToken.approve(swapContract.address, actual, { from: signer });
     await swapContract.removeLiquidityOneToken(
-      10000000000000 / 2,
+      1000 / 2,
       token1.address,
       "500",
       { from: signer }
@@ -141,7 +140,7 @@ describe("Swap", function () {
     const differenceLp = lpBalanceBefore.sub(lpBalanceAfter);
 
     expect(differenceT1.toNumber()).equal(500);
-    expect(differenceLp.toNumber()).equal(10000000000000 / 2);
+    expect(differenceLp.toNumber()).equal(1000 / 2);
   });
 
   it("Can facilitate a 1:1 swap", async function () {
